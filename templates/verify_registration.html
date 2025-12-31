@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Verify Registration</title>
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='logo.png') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='login.css') }}">
+</head>
+
+<body>
+
+    <div class="login-container">
+        <div class="login-card">
+            <!-- Logo -->
+            <img src="{{ url_for('static', filename='logo.png') }}" class="logo" alt="Logo">
+
+            <h1>Verify Account</h1>
+            <p>We sent a verification code to <strong>{{ email }}</strong></p>
+
+            <form method="POST" action="/verify_registration">
+                <input type="hidden" name="email" value="{{ email }}">
+
+                <div class="input-group">
+                    <label>Enter OTP</label>
+                    <input type="text" name="otp" placeholder="123456" required>
+                </div>
+
+                <button type="submit" class="btn-primary">Verify & Login</button>
+            </form>
+
+            <div class="links">
+                <a href="/">Back to Login</a>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>

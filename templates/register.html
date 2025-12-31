@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Register</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='login.css') }}">
+</head>
+
+<body>
+    <div class="login-container">
+        <img src="{{ url_for('static', filename='logo.png') }}" class="logo" alt="Logo">
+        <h2>Create Account</h2>
+
+        <form method="POST">
+            <label>Full Name</label>
+            <input type="text" name="name" required>
+
+            <label>Email Address</label>
+            <input type="email" name="email" required>
+
+            <label>Password</label>
+            <div class="password-wrapper">
+                <input type="password" name="password" id="password" required>
+                <span class="eye-icon" onclick="togglePassword('password')">👁️</span>
+            </div>
+
+            <label>Confirm Password</label>
+            <div class="password-wrapper">
+                <input type="password" name="confirm_password" id="confirm_password" required>
+                <span class="eye-icon" onclick="togglePassword('confirm_password')">👁️</span>
+            </div>
+
+            <button type="submit">Sign Up</button>
+        </form>
+
+        <div class="register">
+            Already have an account? <a href="/">Login here</a>
+        </div>
+    </div>
+    <script>
+        function togglePassword(id) {
+            const input = document.getElementById(id);
+            if (input.type === "password") {
+                input.type = "text";
+            } else {
+                input.type = "password";
+            }
+        }
+    </script>
+</body>
+
+</html>

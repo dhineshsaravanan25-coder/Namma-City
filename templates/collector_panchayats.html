@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Manage Panchayats</title>
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='logo.png') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='citi_pan.css') }}">
+</head>
+
+<body class="dashboard-page">
+
+    <div class="main-container">
+
+        <!-- Header -->
+        <header class="dashboard-header">
+            <img src="{{ url_for('static', filename='logo.png') }}" class="logo" alt="Logo">
+            <h1>Manage Panchayats</h1>
+            <a href="/collector" class="logout-link">Back to Dashboard</a>
+        </header>
+
+        <!-- Create Panchayat Form -->
+        <div class="card form-card">
+            <h3>Create Panchayat Account</h3>
+            <form method="POST" action="/collector/create_panchayat">
+                <div class="form-row">
+                    <input type="text" name="name" placeholder="Panchayat Name" required>
+                    <input type="email" name="email" placeholder="Login Email" required>
+                    <input type="password" name="password" placeholder="Password" required>
+                    <button type="submit" class="btn-primary">Create</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Table -->
+        <div class="card table-card">
+            <h3>Registered Panchayats</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for p in panchayats %}
+                    <tr>
+                        <td><strong>{{ p.name }}</strong></td>
+                        <td>{{ p.email }}</td>
+                        <td>
+                            <span class="status-pill {% if p.is_active %}resolved{% else %}pending{% endif %}">
+                                {{ 'Active' if p.is_active else 'Disabled' }}
+                            </span>
+                        </td>
+                        <td>
+                            <a href="/collector/toggle_panchayat/{{ p.id }}" class="btn-secondary"
+                                style="font-size: 0.8rem; padding: 0.3rem 0.6rem;">
+                                {{ 'Disable' if p.is_active else 'Enable' }}
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+</body>
+
+</html>

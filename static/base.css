@@ -1,0 +1,24 @@
+:root {
+    --primary: #4a86f7;
+    --primary-dark: #3a73e0;
+    --bg-gradient: linear-gradient(135deg, #9ee7e5, #c6f1ee);
+    --light-bg: #f5f7fb;
+    --card-bg: #ffffff;
+    --text-dark: #333;
+    --text-muted: #777;
+    --border-radius: 8px;
+}
+
+/* Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Segoe UI", Tahoma, Arial, sans-serif;
+}
+
+body {
+    min-height: 100vh;
+    background: var(--light-bg);
+    color: var(--text-dark);
+}

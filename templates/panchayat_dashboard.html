@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Panchayat Dashboard</title>
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='logo.png') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='citi_pan.css') }}">
+</head>
+
+<body class="dashboard-page">
+
+    <div class="main-container">
+
+        <!-- Header -->
+        <header class="dashboard-header">
+            <img src="{{ url_for('static', filename='logo.png') }}" class="logo" alt="Logo">
+            <h1>Panchayat Dashboard</h1>
+            <a href="/logout" class="logout-link">Logout</a>
+        </header>
+
+        <!-- Overview -->
+        <div class="card overview-card">
+            <h3>Overview</h3>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <span class="stat-label">Total Complaints</span>
+                    <span class="stat-value">{{ total_complaints }}</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Resolved</span>
+                    <span class="stat-value">{{ resolved_complaints }}</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Create Inspector -->
+        <div class="card form-card">
+            <h3>Create Inspector</h3>
+            <form method="POST" action="/panchayat/create_inspector">
+                <div class="form-row">
+                    <input type="text" name="name" placeholder="Inspector Name" required>
+                    <input type="email" name="email" placeholder="Login Email" required>
+                    <input type="password" name="password" placeholder="Password" required>
+                    <button type="submit" class="btn-primary">Create</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Complaints Table -->
+        <div class="card table-card">
+            <h3>Complaints</h3>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Title</th>
+                        <th>Citizen</th>
+                        <th>Status</th>
+                        <th>Upvotes</th>
+                        <th>Inspector</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% if complaints %}
+                    {% for c in complaints %}
+                    <tr class="{% if c.upvotes >= 10 %}high-priority{% endif %}">
+                        <td>{{ c.id }}</td>
+                        <td>{{ c.title }}</td>
+
+                        <!-- Citizen FIX -->
+                        <td>{{ c.citizen }}</td>
+
+                        <!-- Status -->
+                        <td>
+                            <span class="status-pill {{ c.status|lower }}">
+                                {{ c.status }}
+                            </span>
+                        </td>
+
+                        <!-- Upvotes FIX -->
+                        <td>
+                            <strong>{{ c.upvotes }}</strong>
+                            {% if c.upvotes >= 10 %}🔥{% endif %}
+                        </td>
+
+                        <!-- Assign Inspector -->
+                        <td>
+                            {% if c.inspector_name %}
+                            {{ c.inspector_name }}
+                            {% else %}
+                            <form method="POST" action="/panchayat/assign_inspector/{{ c.id }}">
+                                <select name="inspector_id" required>
+                                    <option value="">Assign</option>
+                                    {% for i in inspectors %}
+                                    <option value="{{ i.id }}">{{ i.name }}</option>
+                                    {% endfor %}
+                                </select>
+                                <button class="btn-secondary">Assign</button>
+                            </form>
+                            {% endif %}
+                        </td>
+
+                        <!-- Update Status -->
+                        <td>
+                            <form method="POST" action="/panchayat/update_status/{{ c.id }}">
+                                <select name="status">
+                                    <option value="Pending" {% if c.status=='Pending' %}selected{% endif %}>Pending
+                                    </option>
+                                    <option value="InProgress" {% if c.status=='InProgress' %}selected{% endif %}>In
+                                        Progress</option>
+                                    <option value="Resolved" {% if c.status=='Resolved' %}selected{% endif %}>Resolved
+                                    </option>
+                                </select>
+                                <button class="btn-secondary">Update</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    {% else %}
+                    <tr>
+                        <td colspan="7" style="text-align:center;">
+                            No complaints available
+                        </td>
+                    </tr>
+                    {% endif %}
+                </tbody>
+
+            </table>
+        </div>
+
+    </div>
+
+</body>
+
+</html>

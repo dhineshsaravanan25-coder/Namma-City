@@ -1,0 +1,44 @@
+label {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+    display: block;
+    letter-spacing: 1px;
+}
+
+input, textarea, select {
+    width: 100%;
+    padding: 12px;
+    border-radius: 6px;
+    border: none;
+    background: #eeeeee;
+    margin-bottom: 20px;
+    font-size: 14px;
+}
+
+input:focus, textarea:focus {
+    outline: none;
+    background: #e6ecff;
+}
+
+/* Primary button */
+.btn {
+    padding: 12px 20px;
+    border-radius: 6px;
+    border: none;
+    background: var(--primary);
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.btn:hover {
+    background: var(--primary-dark);
+}
+
+/* Secondary */
+.btn-outline {
+    background: transparent;
+    border: 2px solid var(--primary);
+    color: var(--primary);
+}

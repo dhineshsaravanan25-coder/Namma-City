@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Collector Dashboard</title>
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='logo.png') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='citi_pan.css') }}">
+</head>
+
+<body class="dashboard-page">
+
+    <div class="main-container">
+
+        <!-- Header -->
+        <header class="dashboard-header">
+            <img src="{{ url_for('static', filename='logo.png') }}" class="logo" alt="Logo">
+            <h1>Collector Dashboard</h1>
+            <a href="/logout" class="logout-link">Logout</a>
+        </header>
+
+        <!-- Overview Cards -->
+        <div class="card overview-card">
+            <h3>District Overview</h3>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <span class="stat-label">Total Complaints</span>
+                    <span class="stat-value">{{ total_complaints }}</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Total Panchayats</span>
+                    <span class="stat-value">{{ total_panchayats }}</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Resolved Complaints</span>
+                    <span class="stat-value">{{ total_resolved }}</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="card actions-card">
+            <h3>Quick Actions</h3>
+            <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                <a href="/collector/panchayats" class="btn-soft" style="text-decoration: none;">Manage Panchayats</a>
+                <a href="/collector/complaints" class="btn-soft" style="text-decoration: none;">View All
+                    Complaints</a>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+
+</html>

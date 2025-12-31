@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Inspector Dashboard</title>
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='logo.png') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='citi_pan.css') }}">
+</head>
+
+<body class="dashboard-page">
+
+    <div class="main-container">
+
+        <!-- Header -->
+        <header class="dashboard-header">
+            <img src="{{ url_for('static', filename='logo.png') }}" class="logo" alt="Logo">
+            <h1>Inspector Dashboard</h1>
+            <a href="/logout" class="logout-link">Logout</a>
+        </header>
+
+        <!-- Complaints Table -->
+        <div class="card table-card">
+            <h3>Assigned Complaints</h3>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Complaint ID</th>
+                        <th>Title</th>
+                        <th>Location</th>
+                        <th>Status</th>
+                        <th>Photo</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if complaints %}
+                    {% for c in complaints %}
+                    <tr>
+                        <td>#{{ c.id }}</td>
+                        <td>{{ c.title }}</td>
+                        <td>
+                            {% if c.location %}
+                            {{ c.location }}
+                            {% else %}
+                            <span style="color: #999;">--</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <span class="status-pill {{ c.status|lower }}">
+                                {{ c.status }}
+                            </span>
+                        </td>
+                        <td>
+                            {% if c.photo %}
+                            <a href="/static/uploads/{{ c.photo }}" target="_blank"
+                                style="color: var(--primary);">View</a>
+                            {% else %}
+                            --
+                            {% endif %}
+                        </td>
+                        <td>
+                            <form method="POST" action="/inspector/update_status/{{ c.id }}">
+                                <select name="status">
+                                    <option value="Pending" {% if c.status=='Pending' %}selected{% endif %}>Pending
+                                    </option>
+                                    <option value="Work Completed" {% if c.status=='Work Completed' %}selected{% endif
+                                        %}>Work Completed</option>
+                                </select>
+                                <button class="btn-secondary">Update</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    {% else %}
+                    <tr>
+                        <td colspan="6" style="text-align: center;">No complaints assigned yet.</td>
+                    </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+</body>
+
+</html>

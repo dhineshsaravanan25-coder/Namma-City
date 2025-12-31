@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Citizen Dashboard</title>
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='logo.png') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="dashboard-header" style="display: flex; align-items: center; margin-bottom: 2rem;">
+            <img src="{{ url_for('static', filename='logo.png') }}" class="logo" alt="Logo">
+            <h2 style="margin: 0; margin-right: auto;">Citizen Dashboard</h2>
+            <a href="/logout" class="btn-secondary">Logout</a>
+        </div>
+
+        <h3>Raise Complaint</h3>
+
+        <form method="POST" action="/add_complaint" enctype="multipart/form-data">
+            <input name="title" placeholder="Title" required>
+
+            <textarea name="description" placeholder="Description" required></textarea>
+
+            <select name="category" required>
+                <option>Road</option>
+                <option>Water</option>
+                <option>Electricity</option>
+                <option>Sanitation</option>
+                <option>Garbage</option>
+                <option>Other</option>
+
+            </select>
+
+            <input name="location" id="location" placeholder="Fetching Location..." required readonly>
+            <input type="hidden" name="latitude" id="latitude">
+            <input type="hidden" name="longitude" id="longitude">
+
+            <label>Upload Photo</label>
+            <input type="file" name="photo" accept="image/*" required>
+
+            <button type="submit">Submit Complaint</button>
+        </form>
+
+        <h3>Complaints</h3>
+        <div class="card">
+            <table>
+                <tr>
+                    <th>Title</th>
+                    <th>Location</th>
+                    <th>Status</th>
+                    <th>Photo</th>
+                    <th>Upvotes</th>
+                    <th>Feedback</th>
+                    <th>Action</th>
+
+                </tr>
+                {% for c in complaints %}
+                <tr>
+                    <td>{{ c.title }}</td>
+                    <td>
+                        {% if c.location %}
+                        {{ c.location }}
+                        {% else %}
+                        <span style="color: #999;">--</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ c.status }}</td>
+                    <td>
+                        {% if c.photo %}
+                        <img src="{{ url_for('static', filename='uploads/' + c.photo) }}" width="80">
+                        {% endif %}
+                    </td>
+                    <td>{{ c.upvotes }}</td>
+
+                    <td>
+                        {% if c.status == 'Resolved' %}
+                        {% if c.rating %}
+                        <div class="feedback-display">
+                            <div>
+                                {% for i in range(c.rating) %}⭐{% endfor %}
+                            </div>
+                            <small>{{ c.feedback }}</small>
+                        </div>
+                        {% else %}
+                        <form action="/submit_feedback" method="POST" class="feedback-form">
+                            <input type="hidden" name="complaint_id" value="{{ c.id }}">
+                            <div style="margin-bottom: 5px;">
+                                <select name="rating" required style="padding: 2px;">
+                                    <option value="" disabled selected>Rate</option>
+                                    <option value="5">5 - Excellent</option>
+                                    <option value="4">4 - Very Good</option>
+                                    <option value="3">3 - Good</option>
+                                    <option value="2">2 - Fair</option>
+                                    <option value="1">1 - Poor</option>
+                                </select>
+                            </div>
+                            <textarea name="feedback" placeholder="Comment..." rows="2"
+                                style="width: 100%; font-size: 0.8rem;" required></textarea>
+                            <button type="submit"
+                                style="padding: 2px 5px; font-size: 0.8rem; margin-top: 2px;">Submit</button>
+                        </form>
+                        {% endif %}
+                        {% else %}
+                        <span style="color: #ccc;">-</span>
+                        {% endif %}
+                    </td>
+
+                    <td>
+                        <a href="/upvote/{{ c.id }}">
+                            {% if c.user_voted %}
+                            👎 Remove Vote
+                            {% else %}
+                            👍 Upvote
+                            {% endif %}
+                        </a>
+                    </td>
+
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+
+    <script>
+        const locationInput = document.getElementById("location");
+        const latInput = document.getElementById("latitude");
+        const lngInput = document.getElementById("longitude");
+
+        // Set initial invalid state to prevent premature submission
+        locationInput.setCustomValidity("Fetching location... Please wait.");
+
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                function (position) {
+                    latInput.value = position.coords.latitude;
+                    lngInput.value = position.coords.longitude;
+                    locationInput.value = "Lat: " + position.coords.latitude + ", Lng: " + position.coords.longitude;
+                    locationInput.setCustomValidity(""); // Clear error
+                },
+                function (error) {
+                    console.error("Geolocation error:", error);
+                    locationInput.value = "";
+                    locationInput.placeholder = "Location Access Denied - Please Enable GPS";
+                    // Force validation failure
+                    locationInput.setCustomValidity("Location access is required to submit a complaint.");
+                }
+            );
+        } else {
+            locationInput.placeholder = "Geolocation not supported";
+            locationInput.setCustomValidity("Geolocation not supported by your browser.");
+        }
+    </script>
+
+</body>
+
+</html>

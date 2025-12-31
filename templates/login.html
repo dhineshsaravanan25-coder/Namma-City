@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>E-Governance Login</title>
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='logo.png') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='login.css') }}">
+</head>
+
+<body>
+    <div class="login-container">
+        <img src="{{ url_for('static', filename='logo.png') }}" class="logo" alt="Logo">
+        <h2>ACCOUNT LOGIN</h2>
+
+        <form method="post" action="/login">
+            <label>Email</label>
+            <input type="email" name="email" required>
+
+            <label>Password</label>
+            <div class="password-wrapper">
+                <input type="password" name="password" id="password" required>
+                <span class="eye-icon" onclick="togglePassword('password')">👁️</span>
+            </div>
+
+            <div class="options" class="right">
+                <a href="/forgot_password">Forgot Password?</a>
+            </div>
+
+            <button type="submit">LOG IN</button>
+        </form>
+
+        <div class="register">
+            New user? <a href="/register">Register here</a>
+        </div>
+    </div>
+
+    <script>
+        function togglePassword(id) {
+            const input = document.getElementById(id);
+            if (input.type === "password") {
+                input.type = "text";
+            } else {
+                input.type = "password";
+            }
+        }
+    </script>
+</body>
+
+</html>
